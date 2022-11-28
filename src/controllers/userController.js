@@ -1,45 +1,106 @@
 const userModel = require('../models/userModel')
+const validations= require("../validations/validation")
+const jwt= require("jsonwebtoken")
 
-const { valid,
-    regForName,
-    regForPassword,
-    regForFullName,
-    regForLink,
-    regForExtension,
-    regForEmail,
-    regForMobileNo,} = require('../validations/validation')
-// console.log(userModel.schema.obj.title.enum)
+let {isEmpty,isValidName,isValidEmail,isValidMobileNo,isValidPassword} = validations
 
-const creatUser = async (req,res)=>{
+//=================================================== REGISTER USERS =========================================//
+
+const createUsers = async (req,res)=>{
  try{  
-    let {title,phone,name,email,password,address,pincode} = req.body
+    let data= req.body
+    let {title,phone,name,email,password} = data
 
-    if(Object.keys(req.body).length == 0){return  res.status(400).send({status: false,message:"All feild is madatory"})}
+    if(Object.keys(data).length == 0){
+        return  res.status(400).send({status: false,message:"request body can not be empty"})
+    }
 
+    if(!title){
+       return res.status(400).send({status:false,message:"title is required"})
+    }
     let titles = userModel.schema.obj.title.enum
     if(!titles.includes(title)){return  res.status(400).send({status: false,message:"Enter valid title 'Mr'/'Mrs'/ 'Miss'  "})}
+    
+    if(!name){
+        return res.status(400).send({status:false,message:"name is required"})
+    }
+    if(!isEmpty){
+        return res.status(400).send({status:false,message:"name can not be empty "})
+    }
+    if(!isValidName(name))
+    {return  res.status(400).send({status: false,message:"Please Enter valid name"})}
 
+    if(!phone){
+        return res.status(400).send({status:false,message:"phone  is required"})
+    }
+    
+    if(!isValidMobileNo(phone)){
+        return  res.status(400).send({status: false,message:"Enter valid Phone number "})}
 
-    if(!regForMobileNo(phone)){return  res.status(400).send({status: false,message:"Enter valid Phone number "})}
-    let PhonuniqueORnot = await userModel.findOne({phone:phone})
-    if(PhonuniqueORnot){return  res.status(400).send({status: false,message:"Phone number is already exist "})}
+    let uniquePhone = await userModel.findOne({phone:phone})
+    if(uniquePhone)
+    {return  res.status(400).send({status: false,message:"Phone number is already exists "})}
 
-    if(!regForName(name)){return  res.status(400).send({status: false,message:"Please Enter valid name"})}
+    if(!email){
+        return res.status(400).send({status:false,message:"email is required"})
+    }
+    if(!isValidEmail(email)){return  res.status(400).send({status: false,message:"Password should be minLen 8, maxLen 15 long and must contain one of 0-9,A-Z,a-z & special char"})}
+   let emailUnique = await userModel.findOne({phone:phone})
+   if(emailUnique){
+        return res.status(400).send({status:false,message:"email already exists"})
+   }
 
-    let EmailuniqueORnot = await userModel.findOne({phone:phone})
-    if(!regForEmail(email)){return  res.status(400).send({status: false,message:"Please Enter valid Email"})}
+   if(!password){
+    return res.status(400).send({status:false,message:"password is required"})
+   }
+    if(!isValidPassword(password)){
+        return  res.status(400).send({status: false,message:"Please Enter valid Password"})
+    }
 
-    if(!regForPassword(password)){return  res.status(400).send({status: false,message:"Please Enter valid Password"})}
-
-
-
-
-    // let creatUserData = userModel.create()
-    console.log('creatUserData')
-    res.status(201).send({status: true,message: 'Success',data:'creatUserData'})
-}catch(err){
-    res.status(500).send({status: false,message:err.message})
+    let createUserData =  await userModel.create(data)
+    return res.status(201).send({status: true, message: 'Success',data:createUserData})
+}
+catch(err){
+   return res.status(500).send({status: false,message:err.message})
 }
 }
 
-module.exports = {creatUser}
+//============================================ USER LOGIN ==================================================///
+
+const userLogin = async function(req, res) {
+    try {
+      const { email, password } = req.body;
+      if (Object.keys(req.body).length == 0)
+        return res.status(400).send({ status: false, message: "Enter Login Credentials." });
+  
+      if (!email) return res.status(400).send({ status: false, msg: "Email Required." });
+  
+      if (!password) return res.status(400).send({ status: false, msg: "Password Required." });
+  
+      if (!isValidEmail(email))
+        return res.status(400).send({ status: false, msg: " Email-Id is invalid"});
+  
+      if (!isValidPassword(password))
+        return res.status(400).send({ status: false, essage: "Password should be minLen 8, maxLen 15 long and must contain one of 0-9,A-Z,a-z & special char", });
+  
+      let user = await userModel.findOne({ email: email, password: password }).select({ _id: 1 });
+  
+      if (!user)
+        return res.status(400).send({ status: false, message: " Incorrect Email or Password !!!" });
+       // const payload = { userId: user._id, iat: Math.floor(Date.now() / 1000) };
+
+        let token = jwt.sign({userId: user._id, iat: Math.floor(Date.now() / 1000)}, "group21",{ expiresIn:"10h"});
+    
+    
+        res.setHeader("x-api-token", token);
+        return res.status(200).send({ status: true, message: "Success", token: token});//, exp: payload.exp, 
+      } catch (err) {
+        return res.status(500).send({ status: false, message: err.message  });
+      }
+    }
+
+module.exports = {createUsers,userLogin}
+
+
+
+//! /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/

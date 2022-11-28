@@ -1,10 +1,10 @@
+const mongoose= require("mongoose")
 //===================== Checking the input value is Valid or Invalid =====================//
-const valid = function (value) {
+
+
+const isEmpty = function (value) {
     if (
-      typeof value == "number" ||
-      typeof value == "undefined" ||
-      typeof value == null
-    ) {
+      typeof value == "number" || typeof value == "undefined" || typeof value == null ) {
       return false;
     }
     if (typeof value == "string" && value.trim().length == 0) {
@@ -13,46 +13,71 @@ const valid = function (value) {
     return true;
   };
   
-  //===================== Checking the input value with Regex =====================//
-  const regForName = function (value) {
+  //===================== NAME VALIDATION =====================//
+
+  const isValidName = function (value) {
     return /^[A-Za-z]+$\b/.test(value);
   };
   
-  const regForFullName = function (value) {
-    return /^[A-Z][a-z]{1,}(?: [A-Z][a-z]+){0,10}$/.test(value);
-  };
-  
-  const regForLink = function (value) {
-    return /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi.test(
-      value
-    );
-  };
-  
-  const regForExtension = function (value) {
-    return /^https?:\/\/.\/.\.(png|gif|webp|jpeg|jpg)\??.*$/.test(value);
-  };
-  
-  const regForEmail = function (value) {
+  //============================ EMAIL VALIDATION ==========================================//
+
+  const isValidEmail = function (value) {
     return /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(value);
   };
   
-  const regForMobileNo = function (value) {
+
+//============================= MOBILE VALIDATION ===========================================//
+
+  const isValidMobileNo = function (value) {
     return /^((\+91)?|91)?[789][0-9]{9}$/.test(value);
   };
 
-const regForPassword = function(value){
-  return   /^(?=.\d)(?=.[a-z])(?=.[A-Z])(?=.[^a-zA-Z0-9])(?!.*\s).{8,15}$/.test(value)
+
+//===================================== PASSWORD VALIDATION ======================================//
+
+
+const isValidPassword = function(value){
+   return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,15}$/.test(value)
+  
 };
 
+//===================================== objectId validation ===================================//
+
+const isValidObjectId = (objectId) => {
+    return mongoose.Types.ObjectId.isValid(objectId)
+}
   
-  //===================== Module Export =====================//
-  module.exports = {
-    valid,
-    regForName,
-    regForFullName,
-    regForPassword,
-    regForLink,
-    regForExtension,
-    regForEmail,
-    regForMobileNo,
-  };
+//======================================Date validation ========================================================//
+
+function isDateValid(dateStr) {
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+
+  if (dateStr.match(regex) === null) {
+    return false;
+  }
+
+  const date = new Date(dateStr);
+
+  const timestamp = date.getTime();
+
+  if(typeof timestamp !== 'number' || Number.isNaN(timestamp)) {
+    return false;
+  }
+
+  return date.toISOString().startsWith(dateStr);
+}
+ 
+  module.exports = {isEmpty,isValidName,isValidEmail,isValidMobileNo,isValidPassword,isDateValid,isValidObjectId};
+
+
+
+
+
+
+      
+    //   const regForExtension = function (value) {
+    //     return /^https?:\/\/.\/.\.(png|gif|webp|jpeg|jpg)\??.*$/.test(value);
+    //   };
+
+
+    //pass--//return   /^(?=.\d)(?=.[a-z])(?=.[A-Z])(?=.[^a-zA-Z0-9])(?!.*\s).{8,15}$/.test(value)

@@ -1,8 +1,19 @@
 const express = require('express')
 const route = express.Router()
 const userController = require('../controllers/userController')
+const bookController= require("../controllers/bookController")
+const middleware= require("../middleware/auth")
 
-route.get('/test', (req,res)=> {return res.send('ok')})
-route.post('/register', userController.creatUser)
+//==============================user api=================================================//
+route.post('/register', userController.createUsers)
+
+route.post("/login",userController.userLogin)
+
+//===============================book api===============================================//
+
+route.post("/books",middleware.authenticate,bookController.createBookData)
+
+route.get('/books',middleware.authenticate,bookController.getBooksData)
+
 
 module.exports = route
