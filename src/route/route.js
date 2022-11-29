@@ -15,5 +15,12 @@ route.post("/books",middleware.authenticate,bookController.createBookData)
 
 route.get('/books',middleware.authenticate,bookController.getBooksData)
 
+route.get("/books/:bookId",middleware.authenticate,bookController.fetchBookById)
+
+route.put("/books/:bookId",middleware.authenticate,bookController.updateBooks)
+
+route.delete("/books/:bookId",middleware.authenticate,bookController.deleteBookById)
+
+
 
 module.exports = route

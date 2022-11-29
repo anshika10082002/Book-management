@@ -44,8 +44,8 @@ const createUsers = async (req,res)=>{
     if(!email){
         return res.status(400).send({status:false,message:"email is required"})
     }
-    if(!isValidEmail(email)){return  res.status(400).send({status: false,message:"Password should be minLen 8, maxLen 15 long and must contain one of 0-9,A-Z,a-z & special char"})}
-   let emailUnique = await userModel.findOne({phone:phone})
+    if(!isValidEmail(email)){return  res.status(400).send({status: false,message:"please enter valid email"})}
+   let emailUnique = await userModel.findOne({email:email})
    if(emailUnique){
         return res.status(400).send({status:false,message:"email already exists"})
    }
@@ -54,7 +54,7 @@ const createUsers = async (req,res)=>{
     return res.status(400).send({status:false,message:"password is required"})
    }
     if(!isValidPassword(password)){
-        return  res.status(400).send({status: false,message:"Please Enter valid Password"})
+        return  res.status(400).send({status: false,message:"Password should be minLen 8, maxLen 15 long and must contain one of 0-9,A-Z,a-z & special char"})
     }
 
     let createUserData =  await userModel.create(data)
@@ -79,23 +79,19 @@ const userLogin = async function(req, res) {
   
       if (!isValidEmail(email))
         return res.status(400).send({ status: false, msg: " Email-Id is invalid"});
-  
       if (!isValidPassword(password))
         return res.status(400).send({ status: false, essage: "Password should be minLen 8, maxLen 15 long and must contain one of 0-9,A-Z,a-z & special char", });
-  
       let user = await userModel.findOne({ email: email, password: password }).select({ _id: 1 });
-  
       if (!user)
         return res.status(400).send({ status: false, message: " Incorrect Email or Password !!!" });
        // const payload = { userId: user._id, iat: Math.floor(Date.now() / 1000) };
 
         let token = jwt.sign({userId: user._id, iat: Math.floor(Date.now() / 1000)}, "group21",{ expiresIn:"10h"});
-    
-    
         res.setHeader("x-api-token", token);
         return res.status(200).send({ status: true, message: "Success", token: token});//, exp: payload.exp, 
-      } catch (err) {
-        return res.status(500).send({ status: false, message: err.message  });
+      }
+       catch (err) {   
+        return res.status(500).send({ status: false, message:err.message });
       }
     }
 
@@ -103,4 +99,4 @@ module.exports = {createUsers,userLogin}
 
 
 
-//! /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/
+

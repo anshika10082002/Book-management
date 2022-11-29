@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
-const bookSchema = mongoose.Schema({
+const bookSchema = new mongoose.Schema({
     title: {type:String, require:true, unique:true},
     excerpt: {type:String, require:true}, 
     userId: {type:ObjectId, require:true,ref:"UserDetails"},
