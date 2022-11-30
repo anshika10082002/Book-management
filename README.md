@@ -110,7 +110,7 @@
 
 ## Review APIs
 ### POST /books/:bookId/review
-- Add a review for the book in reviews collection.
+- Add a review for the book in reviews collection.  
 - Check if the bookId exists and is not deleted before adding the review. Send an error response with appropirate status code like [this](#error-response-structure) if the book does not exist
 - Get review details like review, rating, reviewer's name in request body.
 - Update the related book document by increasing its review count

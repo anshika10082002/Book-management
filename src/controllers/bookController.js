@@ -16,6 +16,8 @@ const createBookData = async (req,res)=>{
     if(Object.keys(req.body).length == 0){
         return res.status(400).send({status: false,message: "data is madatory in request body"})
     }
+
+    //authorization
     if(!title){
         return res.status(400).send({status: false,message: "title is  madatory "})
     }
@@ -53,10 +55,7 @@ const createBookData = async (req,res)=>{
 
 
     if(!releasedAt){return res.status(400).send({status: false,message: "releasedAt is madatory"})}
-    // if(req.body.releasedAt){
-
-    //     data["releasedAt"]=moment().format("YYYY-MM-DD")
-    // }
+   
    if(!isDateValid(releasedAt)){return res.status(400).send({status: false,message:"releasedAt date should be in  format YYYY-MM-DD ,2000-03-04"})}
 
   
@@ -125,33 +124,24 @@ const fetchBookById = async (req, res) => {
     try {
         let bookId = req.params.bookId
 
-        if(!bookId){return res.status(400).send("id not present")}
+        if (!bookId) { return res.status(400).send("id not present") }
 
+        bookId = bookId.toString()
         if (!isValidObjectId(bookId)) { return res.status(400).send({ status: false, message: " invalid bookId plese Enter again ...!" }) }
 
-        let books = await bookModel.findOne({$and:[{ _id:bookId, isDeleted: false }]})
-        if (books.length == 0) { return res.status(404).send({ status: false, message: "book not found" }) }
+        let books = await bookModel.findOne({ $and: [{ _id: bookId, isDeleted: false }] }).lean()
+       
+        if (!books) { return res.status(404).send({ status: false, message: "book not found" }) }
 
-        let {_id,title,excerpt,userId,category,subcategory,isDeleted,reviews,releasedAt,createdAt,updatedAt} = books
-        let obj = {_id,title,excerpt,userId,category,subcategory,isDeleted,reviews,releasedAt,createdAt,updatedAt}
-        let allReviews = await reviewModel.find({bookId:bookId})
-        let reviewsArray = allReviews
-        obj.reviewsData = reviewsArray
-        obj.reviews = reviewsArray.length
-        res.status(200).send({ status: true, message: 'Books list', data:obj })
+
+         let Reviews = await reviewModel.find({ $and: [{ bookId: bookId, isDeleted: false }] })
+         books.reviewsData = Reviews
+         books.reviews = Reviews.length
+      return  res.status(200).send({ status: true, message: 'Books list', data: books })
     } catch (err) {
-        res.status(500).send({ status: false, message: err.message })
+       return res.status(500).send({ status: false, message: err.message })
     }
 }
-
-
-    //     const createReviews = async (req,res)=>{
-    //      let data = req.body 
-    // let Allreviews = await reviewsModel.create(data)
-    // res.status(201).send({ status: true, data:Allreviews })
-//} 
-
-
 
 
 //============================================= Update books by bookId=============================================///
@@ -199,16 +189,16 @@ const updateBooks = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message })
     }
 
-}
+}  
 
 
 //====================================================== Delete book by BookId=======================================//
 
 const deleteBookById = async function (req,res) {
     try{
-        let bookId =req.params.bookId;
+        let bookId = req.params.bookId;
 
-        if (!bookId){ return res.status(400).send({status:false,message:"BookId is required"})}
+        if(!bookId){ return res.status(400).send({status:false,message:"BookId is required"})}
 
         if(!isValidObjectId(bookId)){
             return res.status(400).send({status:false,message:"enter valid bookId"})
