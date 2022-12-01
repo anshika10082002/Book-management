@@ -5,12 +5,12 @@ const bookController= require("../controllers/bookController")
 const reviewController= require("../controllers/reviewController")
 const middleware= require("../middleware/auth")
 
-//==============================user api=================================================//
+//==============================user apis=================================================//
 route.post('/register', userController.createUsers)
 
 route.post("/login",userController.userLogin)
 
-//===============================book api===============================================//
+//===============================book apis===============================================//
 
 route.post("/books",middleware.authenticate,bookController.createBookData)
 
@@ -29,5 +29,7 @@ route.post("/books/:bookId/review",reviewController.createReviews)
 route.put("/books/:bookId/review/:reviewId",reviewController.updateReviwews)
 
 route.delete("/books/:bookId/review/:reviewId",reviewController.deleteReviews)
+
+
 
 module.exports = route

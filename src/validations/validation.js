@@ -66,8 +66,17 @@ function isDateValid(dateStr) {
 
   return date.toISOString().startsWith(dateStr);
 }
+
+
+//================================ ISBN Validation ========================================================//
+
+const isValidISBN = function(value){
+  return /(?:[0-9]{9}[0-9X]|[0-9]{13}|[0-9][0-9-]{11}[0-9X]|[0-9][0-9-]{15}[0-9])(?![0-9-])/.test(value)
+};
+
+  module.exports = {isEmpty,isValidName,isValidEmail,isValidMobileNo,isValidPassword,isDateValid,isValidObjectId ,isValidISBN};
  
-  module.exports = {isEmpty,isValidName,isValidEmail,isValidMobileNo,isValidPassword,isDateValid,isValidObjectId};
+ 
 
 
 
