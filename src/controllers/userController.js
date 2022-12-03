@@ -56,6 +56,10 @@ const createUsers = async (req,res)=>{
     if(!isValidPassword(password)){
         return  res.status(400).send({status: false,message:"Password should be minLen 8, maxLen 15 long and must contain one of 0-9,A-Z,a-z & special char"})
     }
+    let uniquePassword = await userModel.findOne({password:password})
+    if(uniquePassword){
+         return res.status(400).send({status:false,message:"password already exists"})
+    }
 
     let createUserData =  await userModel.create(data)
     return res.status(201).send({status: true, message: 'Success',data:createUserData})
@@ -73,22 +77,23 @@ const userLogin = async function(req, res) {
       if (Object.keys(req.body).length == 0)
         return res.status(400).send({ status: false, message: "Enter Login Credentials." });
   
-      if (!email) return res.status(400).send({ status: false, msg: "Email Required." });
+      if(!email) return res.status(400).send({ status: false, msg: "Email Required." });
   
-      if (!password) return res.status(400).send({ status: false, msg: "Password Required." });
-  
-      if (!isValidEmail(email))
+      if(!isValidEmail(email))
         return res.status(400).send({ status: false, msg: " Email-Id is invalid"});
-      if (!isValidPassword(password))
-        return res.status(400).send({ status: false, essage: "Password should be minLen 8, maxLen 15 long and must contain one of 0-9,A-Z,a-z & special char", });
-      let user = await userModel.findOne({ email: email, password: password }).select({ _id: 1 });
-      if (!user)
-        return res.status(400).send({ status: false, message: " Incorrect Email or Password !!!" });
-       // const payload = { userId: user._id, iat: Math.floor(Date.now() / 1000) };
 
+      if(!password) return res.status(400).send({ status: false, msg: "Password Required." });
+      if(!isValidPassword(password))
+        return res.status(400).send({ status: false, essage: "Password should be minLen 8, maxLen 15 long and must contain one of 0-9,A-Z,a-z & special char", });
+
+      let user = await userModel.findOne({ email: email, password: password }).select({ _id: 1 });
+      if(!user)
+        return res.status(404).send({ status: false, message: " user is not found !!!" });
+      
+///------------------------- generate jwt token--------------------//
         let token = jwt.sign({userId: user._id, iat: Math.floor(Date.now() / 1000)}, "group21",{ expiresIn:"10h"});
         res.setHeader("x-api-token", token);
-        return res.status(200).send({ status: true, message: "Success", token: token});//, exp: payload.exp, 
+        return res.status(200).send({ status: true, message: "Success", token: token}); 
       }
        catch (err) {   
         return res.status(500).send({ status: false, message:err.message });
