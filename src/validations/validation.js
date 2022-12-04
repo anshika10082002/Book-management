@@ -2,21 +2,15 @@ const mongoose= require("mongoose")
 //===================== Checking the input value is Valid or Invalid =====================//
 
 
+
 const isEmpty = function (value) {
-    if (
-      typeof value == "number" || typeof value == "undefined" || typeof value == null ) {
-      return false;
-    }
-    if (typeof value == "string" && value.trim().length == 0) {
-      return false;
-    }
-    return true;
-  };
+  return ((value.match(/^\s*$/) || []).length > 0)
+ };
   
   //===================== NAME VALIDATION =====================//
 
   const isValidName = function (value) {
-    return /^[A-Za-z]+$\b/.test(value);
+    return /^[a-zA-Z( \)]{2,50}$/.test(value);                       ///^[A-Za-z]+$\b/
   };
   
   //============================ EMAIL VALIDATION ==========================================//
@@ -71,7 +65,7 @@ function isDateValid(dateStr) {
 //================================ ISBN Validation ========================================================//
 
 const isValidISBN = function(value){
-  return /(?:[0-9]{9}[0-9X]|[0-9]{13}|[0-9][0-9-]{11}[0-9X]|[0-9][0-9-]{15}[0-9])(?![0-9-])/.test(value)
+  return /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/g.test(value)             ///(?:[0-9]{9}[0-9X]|[0-9]{13}|[0-9][0-9-]{11}[0-9X]|[0-9][0-9-]{15}[0-9])(?![0-9-])/
 };
 
   module.exports = {isEmpty,isValidName,isValidEmail,isValidMobileNo,isValidPassword,isDateValid,isValidObjectId ,isValidISBN};
@@ -82,11 +76,14 @@ const isValidISBN = function(value){
 
 
 
+  // const isEmpty = function (value) {
 
-      
-    //   const regForExtension = function (value) {
-    //     return /^https?:\/\/.\/.\.(png|gif|webp|jpeg|jpg)\??.*$/.test(value);
-    //   };
-
-
-    //pass--//return   /^(?=.\d)(?=.[a-z])(?=.[A-Z])(?=.[^a-zA-Z0-9])(?!.*\s).{8,15}$/.test(value)
+//     // if (
+//     //   typeof value == "number" || typeof value == "undefined" || typeof value == null ) {
+//     //   return false;
+//     // }
+//     // if (typeof value == "string" && value.trim().length == 0) {
+//     //   return false;
+//     // }
+//     // return true;
+//   };

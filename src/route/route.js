@@ -14,7 +14,7 @@ route.post("/login",userController.userLogin)
 
 route.post("/books",middleware.authenticate,bookController.createBookData)
 
-route.get('/books',bookController.getBooksData)//middleware.authenticate,
+route.get('/books',middleware.authenticate,bookController.getBooksData)
 
 route.get("/books/:bookId",middleware.authenticate,bookController.fetchBookById)
 

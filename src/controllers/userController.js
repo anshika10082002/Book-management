@@ -61,7 +61,7 @@ const createUsers = async (req,res)=>{
          return res.status(400).send({status:false,message:"password already exists"})
     }
 
-    let createUserData =  await userModel.create(data)
+    let createUserData = await userModel.create(data)
     return res.status(201).send({status: true, message: 'Success',data:createUserData})
 }
 catch(err){
