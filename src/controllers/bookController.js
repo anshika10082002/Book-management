@@ -165,7 +165,7 @@ const updateBooks = async function (req, res) {
         if(findBook.releasedAt == releasedAt){ return res.status(400).send({ status: false, message: "releasedAt should be uniqe" })}
 
         let updateBooks = await bookModel.findOneAndUpdate(
-            {_id:bookId},//book
+            {_id:bookId},
             {$set:{title:title,excerpt:excerpt,releasedAt:releasedAt,ISBN:ISBN}},
            { new : true}
         )
