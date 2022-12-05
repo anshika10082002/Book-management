@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anshika10082002/project3.git"
+    "url": ""
   },
   "author": "Anshika,Vishal,Dhiraj",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/anshika10082002/project3/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/anshika10082002/project3#readme",
+  "homepage": "",
   "dependencies": {
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
