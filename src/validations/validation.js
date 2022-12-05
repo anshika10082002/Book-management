@@ -10,7 +10,7 @@ const isEmpty = function (value) {
   //===================== NAME VALIDATION =====================//
 
   const isValidName = function (value) {
-    return /^[a-zA-Z( \)]{2,50}$/.test(value);                       ///^[A-Za-z]+$\b/
+    return /^[a-zA-Z( \)]{2,50}$/.test(value);                     
   };
   
   //============================ EMAIL VALIDATION ==========================================//
@@ -65,25 +65,6 @@ function isDateValid(dateStr) {
 //================================ ISBN Validation ========================================================//
 
 const isValidISBN = function(value){
-  return /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/g.test(value)             ///(?:[0-9]{9}[0-9X]|[0-9]{13}|[0-9][0-9-]{11}[0-9X]|[0-9][0-9-]{15}[0-9])(?![0-9-])/
+  return /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/g.test(value)        
 };
-
-  module.exports = {isEmpty,isValidName,isValidEmail,isValidMobileNo,isValidPassword,isDateValid,isValidObjectId ,isValidISBN};
- 
- 
-
-
-
-
-
-  // const isEmpty = function (value) {
-
-//     // if (
-//     //   typeof value == "number" || typeof value == "undefined" || typeof value == null ) {
-//     //   return false;
-//     // }
-//     // if (typeof value == "string" && value.trim().length == 0) {
-//     //   return false;
-//     // }
-//     // return true;
-//   };
+ module.exports = {isEmpty,isValidName,isValidEmail,isValidMobileNo,isValidPassword,isDateValid,isValidObjectId ,isValidISBN};
