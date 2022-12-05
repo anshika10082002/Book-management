@@ -49,7 +49,7 @@ const createBookData = async (req,res)=>{
         return res.status(400).send({status: false,message: "ISBN is  madatory "})
 
     }
-    if(!isValidISBN(ISBN)){ return res.status(400).send({ status: false, message: "ISBN should be valid" })}
+    if(!isValidISBN(ISBN)){ return res.status(400).send({ status: false, message: "ISBN should be valid ,10 or 13 digits" })}
     let ISBNInModel = await bookModel.findOne({ISBN:ISBN})
 
     if(ISBNInModel){return res.status(400).send({status: false,message: "ISBN should be Unique "})}
@@ -127,7 +127,6 @@ const fetchBookById = async (req, res) => {
        return res.status(500).send({ status: false, message: err.message })
     }
 }
-
 
 //============================================= Update books by bookId=============================================///
 
@@ -226,12 +225,8 @@ const deleteBookById = async function (req,res) {
 
 
 
-
 module.exports.getBooksData = getBooksData
 module.exports.createBookData = createBookData
 module.exports.updateBooks=updateBooks
 module.exports.deleteBookById=deleteBookById
 module.exports.fetchBookById = fetchBookById 
-
-
-

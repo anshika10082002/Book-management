@@ -64,7 +64,7 @@ const updateReviwews = async (req, res) => {
 
         let findReview= await  reviewModel.findById(reviewerId)
         if(!findReview){ return res.status(404).send({status:false, message:"review not found"})}
-        if(findReview.isDeleted){  return res.status(404).send({status:false, message:"review is deleted ,can't be update"})}
+        if(findReview.isDeleted){  return res.status(400).send({status:false, message:"review is deleted ,can't be update"})}
 
         let reviewData = req.body
         let {review , rating , reviewedBy}=reviewData
@@ -136,15 +136,3 @@ const deleteReviews = async function (req,res){
 module.exports.createReviews=createReviews
 module.exports.updateReviwews = updateReviwews
 module.exports.deleteReviews=deleteReviews
-
-
-
-
-
-
-
-
-
-
-
-

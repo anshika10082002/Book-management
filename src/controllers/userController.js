@@ -24,7 +24,7 @@ const createUsers = async (req,res)=>{
     if(!name){
         return res.status(400).send({status:false,message:"name is required"})
     }
-    if(!isEmpty){
+    if(isEmpty(name)){
         return res.status(400).send({status:false,message:"name can not be empty "})
     }
     if(!isValidName(name))
@@ -100,8 +100,5 @@ const userLogin = async function(req, res) {
       }
     }
 
+
 module.exports = {createUsers,userLogin}
-
-
-
-
