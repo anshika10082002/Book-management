@@ -8,7 +8,8 @@
 - Follow the naming conventions exactly as instructed.
 
 ### Models
-- User Model
+
+- **User Model**
 ```yaml
 { 
   title: {string, mandatory, enum[Mr, Mrs, Miss]},
@@ -26,7 +27,7 @@
 }
 ```
 
-- Books Model
+- **Books Model**
 ```yaml
 { 
   title: {string, mandatory, unique},
@@ -44,7 +45,7 @@
 }
 ```
 
-- Review Model (Books review)
+- **Review Model** (Books review)
 ```yaml
 {
   bookId: {ObjectId, mandatory, refs to book model},
@@ -57,6 +58,7 @@
 ```
 
 ## User APIs 
+
 ### POST /register
 - Create a user - atleast 5 users
 - Create a user document from request body.
